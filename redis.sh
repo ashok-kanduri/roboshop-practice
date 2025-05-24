@@ -47,7 +47,9 @@ sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c proctected-mode no' /et
 VALIDATE $? "enabling remote connections"
 
 systemctl enable redis &>>$LOG_FILE
-systemctl start redis
+VALIDATE $? "enabling redis"
+
+systemctl start redis &>>$LOG_FILE
 VALIDATE $? "Starting redis"
 
 END_TIME=$(date +%s)
