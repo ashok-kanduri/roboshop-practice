@@ -10,7 +10,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
-USER_DIR=$PWD
+SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
 echo "script started executing at: "$(date) 
@@ -23,8 +23,6 @@ if [ $USERID -eq 0 ]
         exit 1
     fi
 
- cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
-
 VALIDATE(){
     if [ $1 -eq 0 ]
     then
@@ -34,6 +32,8 @@ VALIDATE(){
         exit 1
     fi
 }
+
+cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
 
  dnf install mongodb-org -y &>>$LOG_FILE
  VALIDATE $? "Installing mongobd"

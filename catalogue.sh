@@ -10,7 +10,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
-USER_DIR=$PWD
+SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
 echo "script started executing at: $(date)" 
@@ -22,8 +22,6 @@ if [ $USERID -eq 0 ]
         echo -e "$R ERROR:: please run this script using root access $N"
         exit 1
     fi
-
- cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
 
 VALIDATE(){
     if [ $1 -eq 0 ]
@@ -67,7 +65,7 @@ VALIDATE $? "Unzipping Catalogue"
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing dependencies"
 
-cp $USER_DIR/catalogue.service /etc/systemd/system/catalogue.service 
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service 
 VALIDATE $? "Copying catalogue.service"
 
 systemctl daemon-reload &>>$LOG_FILE
@@ -75,7 +73,7 @@ systemctl enable catalogue &>>$LOG_FILE
 systemctl start catalogue
 VALIDATE $? "Starting catalogue service"
 
-cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
+cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
 VALIDATE $? "copying mongodb"
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
