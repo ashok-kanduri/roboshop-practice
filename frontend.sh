@@ -10,7 +10,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
-USER_DIR=$PWD
+SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
 echo "script started executing at: $(date)" 
@@ -23,7 +23,7 @@ if [ $USERID -eq 0 ]
         exit 1
     fi
 
- cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
+ cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
 
 VALIDATE(){
     if [ $1 -eq 0 ]
@@ -55,8 +55,8 @@ cd /usr/share/nginx/html
 unzip /tmp/frontend.zip &>>$LOG_FILE
 VALIDATE $? "unzipping frontend"
 
-rm -rf /etc/nginx/*
-cp $USER_DIR/nginx.conf /etc/nginx/nginx.conf
+rm -rf /etc/nginx/nginx.conf
+cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "copying nginx conf"
 
 systemctl restart nginx 
