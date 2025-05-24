@@ -23,4 +23,18 @@ if [ $USERID -eq 0 ]
         exit 1
     fi
 
- cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
+ cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
+
+VALIDATE(){
+    if [ $1 -eq 0 ]
+    then
+        echo -e "$2 is.... $G SUCCESSFUL $N" | tee -a $LOG_FILE
+    else
+        echo -e "$2 is.... $R FAILURE $N" | tee -a $LOG_FILE
+        exit 1
+    fi
+}
+
+ dnf install mongodb -y &>>$LOG_FILE
+ VALIDATE $? "Installing mongobd"
+
