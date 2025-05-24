@@ -43,12 +43,12 @@ VALIDATE $? "enabling redis:7"
 dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "Installing redis"
 
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c proctected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
+VALIDATE $? "enabling remote connections"
+
 systemctl enable redis &>>$LOG_FILE
 systemctl start redis
 VALIDATE $? "Starting redis"
-
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c proctected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
-VALIDATE $? "enabling remote connections"
 
 END_TIME=$(date +%s)
 TOTAL_TIME=(( $END_TIME - $START_TIME ))
