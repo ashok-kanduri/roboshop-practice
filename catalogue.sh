@@ -49,7 +49,9 @@ if [ $? -eq 0 ]
 then 
     echo -e "system user roboshop already created... $Y SKIPPING $N" | tee -a $LOG_FILE
 else
-    useradd --system --home /app --shell /sbin/nologin --comment "system user roboshop" roboshop $LOG_FILE
+    useradd --system --home /app --shell /sbin/nologin --comment "system user roboshop" roboshop &>>$LOG_FILE
     VALIDATE $? "creating system user roboshop"
 fi
+
+
 
