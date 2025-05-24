@@ -53,5 +53,46 @@ else
     VALIDATE $? "creating system user roboshop"
 fi
 
+mkdir -p /app &>>$LOG_FILE
+VALIDATE $? "Creating app directory"
+
+rm -rf /app/*
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
+VALIDATE $? "Downloading Catalogue"
+
+cd /app 
+unzip /tmp/catalogue.zip &>>$LOG_FILE
+VALIDATE $? "Unzipping Catalogue"
+
+npm install &>>$LOG_FILE
+VALIDATE $? "Installing dependencies"
+
+cp $USER_DIR/catalogue.service /etc/systemd/system/catalogue.service 
+VALIDATE $? "Copying catalogue.service"
+
+systemctl daemon-reload &>>$LOG_FILE
+systemctl enable catalogue &>>$LOG_FILE
+systemctl start catalogue
+VALIDATE $? "Starting catalogue service"
+
+cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
+VALIDATE $? "copying mongodb"
+
+dnf install mongodb-mongosh -y &>>$LOG_FILE
+VALIDATE $? "Installinng mongosh client server"
+
+STATUS=$(mongosh --host mongodb.kashok.store --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+if [ $STATUS -lt 0 ]
+then 
+    mongosh --host mongodb.kashok.store </app/db/master-data.js &>>$LOG_FILE
+    VALIDATE $? "Loading data into mongodb"
+else 
+    echo -e "Data is already loaded... $Y SKIPPING $N"
+fi
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+
+echo -e "script execution completed succesfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
 
 
