@@ -23,7 +23,6 @@ if [ $USERID -eq 0 ]
         exit 1
     fi
 
- cp $SCRIPT_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo 
 
 VALIDATE(){
     if [ $1 -eq 0 ]
@@ -45,9 +44,10 @@ dnf install nginx -y &>>$LOG_FILE
 VALIDATE $? "Installing nginx"
 
 systemctl enable nginx &>>$LOG_FILE
+VALIDATE $? "Enabling nginx"
+
 systemctl start nginx 
 VALIDATE $? "Starting nginx"
-
 
 rm -rf /usr/share/nginx/html/*
 curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
