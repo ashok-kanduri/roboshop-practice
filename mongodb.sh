@@ -22,3 +22,5 @@ if [ $USERID -eq 0 ]
         echo -e "$R ERROR:: please run this script using root access $N"
         exit 1
     fi
+
+ cp $USER_DIR/mongodb.repo /etc/yum.repos.d/mongodb.repo
