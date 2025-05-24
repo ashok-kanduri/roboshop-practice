@@ -35,6 +35,6 @@ VALIDATE(){
     fi
 }
 
- dnf install mongodb -y &>>$LOG_FILE
+ dnf install mongodb-org -y &>>$LOG_FILE
  VALIDATE $? "Installing mongobd"
 
