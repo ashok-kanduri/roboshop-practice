@@ -12,7 +12,7 @@ SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.log
 USER_DIR=$PWD
 
-mkdir $LOGS_FOLDER
+mkdir -p $LOGS_FOLDER
 echo "script started executing at: "$(date) 
 
 if [ $USERID -eq 0 ]
@@ -37,4 +37,16 @@ VALIDATE(){
 
  dnf install mongodb-org -y &>>$LOG_FILE
  VALIDATE $? "Installing mongobd"
+
+ systemctl enable mongod &>>$LOG_FILE
+ VALIDATE $? "Enabling mongodb"
+
+ systemctl start mongod &>>$LOG_FILE
+ VALIDATE $? "starting mongodb"
+
+ sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>>$LOG_FILE
+ VALIDATE $? "making changes to mongod.conf file for remote connections"
+
+systemctl restart mongod
+VALIDATE $? "restarting mongodb"
 
