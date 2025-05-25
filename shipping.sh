@@ -36,7 +36,8 @@ VALIDATE(){
 echo "please enter root password to setup files"
 read -s MYSQL_ROOT_PASSWORD
 
-dnf install maven -y
+dnf install maven -y &>>$LOG_FILE
+VALIDATE $? "Installing maven & java"
 
 id roboshop &>>$LOG_FILE
 if [ $? -eq 0 ]

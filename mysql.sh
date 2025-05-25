@@ -51,4 +51,4 @@ VALIDATE $? "changing Default password"
 END_TIME=$(date +%s)
 TOTAL_TIME=$(($END_TIME - $START_TIME ))
 
-echo "script executed succesfully, time taken: $Y $TOTAL_TIME $N seconds" | tee -a  $LOG_FILE
+echo -e "script executed succesfully, time taken: $Y $TOTAL_TIME $N seconds" | tee -a  $LOG_FILE
