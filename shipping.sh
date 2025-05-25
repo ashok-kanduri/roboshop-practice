@@ -34,7 +34,7 @@ VALIDATE(){
 }
 
 echo "please enter root password to setup files"
-read MYSQL_PASSWORD
+read MYSQL_ROOT_PASSWORD
 
 dnf install maven -y &>>$LOG_FILE
 VALIDATE $? "Installing maven & java"
@@ -80,12 +80,12 @@ VALIDATE $? "starting shipping"
 dnf install mysql -y &>>$LOG_FILE
 VALIDATE $? "Installing mysql"
 
-mysql -h mysql.kashok.store -uroot -p$MYSQL_PASSWORD -e 'use cities' &>>$LOG_FILE
+mysql -h mysql.kashok.store -uroot -pMYSQL_ROOT_PASSWORD -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
-    mysql -h mysql.kashok.store -uroot -p$MYSQL_PASSWORD < /app/db/schema.sql &>>$LOG_FILE
-    mysql -h mysql.kashok.store -uroot -p$MYSQL_PASSWORD < /app/db/app-user.sql &>>$LOG_FILE
-    mysql -h mysql.kashok.store -uroot -p$MYSQL_PASSWORD < /app/db/master-data.sql &>>$LOG_FILE
+    mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/schema.sql &>>$LOG_FILE
+    mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/app-user.sql &>>$LOG_FILE
+    mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/master-data.sql &>>$LOG_FILE
     VALIDATE $? "loading data"
 else
     echo -e "Data is already loaded into mysql $Y SKIPPING $N"

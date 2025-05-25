@@ -88,6 +88,7 @@ then
     mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/schema.sql &>>$LOG_FILE
     mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/app-user.sql &>>$LOG_FILE
     mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/master-data.sql &>>$LOG_FILE
+    VALIDATE $? "loading data"
 else
     echo -e "Data is already loaded into mysql $Y SKIPPING $N"
 fi
