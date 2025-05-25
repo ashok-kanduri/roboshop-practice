@@ -33,22 +33,22 @@ VALIDATE(){
     fi
 }
 
-echo "please enter root password to setup files"
-read -s MYSQL_ROOT_PASSWORD
+echo "Please enter root password to setup the service:"
+read -s ROBOSHOP_ROOT_PASSWORD
 
 dnf install mysql-server -y &>>$LOG_FILE
-VALIDATE $? "Installing mysql server"
+VALIDATE $? "Installing mysql"
 
 systemctl enable mysqld &>>$LOG_FILE
-systemctl start mysqld 
-VALIDATE $? "starting mysql"
+VALIDATE $? "Enabling mysql"
 
-mysql_secure_installation --set-root-pass $MYSQL_ROOT_PASSWORD &>>$LOG_FILE 
-VALIDATE $? "Setting mysql root password"
+systemctl start mysqld &>>$LOG_FILE
+VALIDATE $? "Starting mysql"
+
+mysql_secure_installation --set-root-pass ROBOSHOP_ROOT_PASSWORD &>>$LOG_FILE 
+VALIDATE $? "changing Default password"
 
 END_TIME=$(date +%s)
-TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+TOTAL_TIME=$(($END_TIME - $START_TIME ))
 
-echo -e "script execution completed succesfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
-
-
+echo "script executed succesfully, time taken: $Y $TOTAL_TIME $N seconds" | tee -a  $LOG_FILE

@@ -40,44 +40,44 @@ dnf install maven -y
 
 id roboshop &>>$LOG_FILE
 if [ $? -eq 0 ]
-    then
-        echo "system user roboshop already created" 
-    else 
-        useradd --system --home /app --shell /sbin/nologin --comment "system user roboshop" roboshop &>>$LOG_FILE
-        VALIDATE $? "Creating system user roboshop"
-    fi
+then 
+    echo "system user roboshop already created"
+else
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+    VALIDATE $? "creating system user roboshop"
+fi
 
 mkdir -p /app &>>$LOG_FILE
-VALIDATE $? "creating app directory"
-
-rm -rf /app/* &>>$LOG_FILE
+VALIDATE $? "Creating app directory"
 
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$LOG_FILE
-VALIDATE $? "downloading shipping"
+VALIDATE $? "Downloading shipping"
 
+rm -rf /app/*
 cd /app 
 unzip /tmp/shipping.zip &>>$LOG_FILE
+VALIDATE $? "Unzipping shipping"
 
 mvn clean package &>>$LOG_FILE
-VALIDATE $? "Packaging the shipping Application"
+VALIDATE $? "packaging the code"
 
 mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
-VALIDATE $? "Moving and renaming jar file"
+VALIDATE $? "editing and moving shipping"
 
-cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
-VALIDATE $? "Copying shipping service"
+cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
+VALIDATE $? "copying shipping service"
 
 systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "Daemon reload"
+VALIDATE $? "daemon reload"
 
 systemctl enable shipping &>>$LOG_FILE
-VALIDATE $? "Enabling shipping"
+VALIDATE $? "Enable shipping"
 
 systemctl start shipping
-VALIDATE $? "Starting shipping"
+VALIDATE $? "starting shipping"
 
-dnf install mysql -y &>>$LOG_FILE
-VALIDATE $? "Installing mysql"
+dnf install mysql-server -y &>>$LOG_FILE
+VALIDATE $? "Installing shipping"
 
 mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]
