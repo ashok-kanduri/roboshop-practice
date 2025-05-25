@@ -78,7 +78,7 @@ systemctl start shipping
 VALIDATE $? "starting shipping"
 
 dnf install mysql-server -y &>>$LOG_FILE
-VALIDATE $? "Installing shipping"
+VALIDATE $? "Installing mysql server"
 
 mysql -h mysql.kashok.store -uroot -p$MYSQL_ROOT_PASSWORD -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]
