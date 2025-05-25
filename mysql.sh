@@ -34,7 +34,7 @@ VALIDATE(){
 }
 
 echo "Please enter root password to setup the service:"
-read -s ROBOSHOP_ROOT_PASSWORD
+read -s MYSQL_ROOT_PASSWORD
 
 dnf install mysql-server -y &>>$LOG_FILE
 VALIDATE $? "Installing mysql"
@@ -45,7 +45,7 @@ VALIDATE $? "Enabling mysql"
 systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "Starting mysql"
 
-mysql_secure_installation --set-root-pass ROBOSHOP_ROOT_PASSWORD &>>$LOG_FILE 
+mysql_secure_installation --set-root-pass MYSQL_ROOT_PASSWORD &>>$LOG_FILE 
 VALIDATE $? "changing Default password"
 
 END_TIME=$(date +%s)
